@@ -122,3 +122,7 @@ if __name__ == '__main__':
     dir_sizes = calculate_tree_size(tree)
 
     print(sum(s for s in dir_sizes.values() if s <= 100000))
+    
+    needed_space = 30000000 - (70000000 - dir_sizes['/'])
+    print(min(s for s in dir_sizes.values() if s >= needed_space))
+    
