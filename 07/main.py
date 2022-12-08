@@ -1,6 +1,6 @@
 import unittest
 import re
-
+from time import monotonic_ns
 
 class TodaysTest(unittest.TestCase):
     sample = ["$ cd /",
@@ -114,15 +114,51 @@ def get_dir_from_path(tree, curr_path: [str]) -> dict:
     return curr_dir
 
 
+def alt_method(terminal: [str]) -> dict:
+    current_dirs = ['/']
+    dir_sizes = {'/': 0}
+    for line in terminal:
+        line = line.strip()
+        if line == '$ cd /':
+            continue
+        if line == '$ cd ..':
+            current_dirs.pop()
+            continue
+        if line[:5] == '$ cd ':
+            new_dir = f"{current_dirs[-1]}/{line[5:]}"
+            current_dirs.append(new_dir)
+            dir_sizes[new_dir] = 0
+            continue
+        match = re.match(r'^(\d+) (.+)$', line)
+        if match:
+            for dir_name in current_dirs:
+                dir_sizes[dir_name] += int(match[1])
+            continue
+
+    return dir_sizes
+
 if __name__ == '__main__':
     with open('input.txt', 'r') as f:
         terminal = f.readlines()
     
+    start = monotonic_ns()
     tree = build_tree(terminal)
     dir_sizes = calculate_tree_size(tree)
+    end = monotonic_ns()
+    print(f"It took {end - start} to run")
 
     print(sum(s for s in dir_sizes.values() if s <= 100000))
     
     needed_space = 30000000 - (70000000 - dir_sizes['/'])
     print(min(s for s in dir_sizes.values() if s >= needed_space))
     
+    start = monotonic_ns()
+    alt_dir_sizes = alt_method(terminal)
+    end = monotonic_ns()
+    print(f"It took {end - start} to run")
+
+    print(sum(s for s in dir_sizes.values() if s <= 100000))
+
+    needed_space = 30000000 - (70000000 - dir_sizes['/'])
+    print(min(s for s in dir_sizes.values() if s >= needed_space))
+
