@@ -48,13 +48,17 @@ class TodaysTest(unittest.TestCase):
     def test_build_tree(self):
         self.assertEqual(build_tree(self.sample), self.expected_tree)
         
-    def test_get_sizes(self):
-        self.assertEqual(calculate_tree_size(self.expected_tree), {
+    expected_sizes = {
             '/a/e/': 584,
             '/a/': 94853,
             '/d/': 24933642,
             '/': 48381165
-        })
+        }
+    def test_get_sizes(self):
+        self.assertEqual(calculate_tree_size(self.expected_tree), self.expected_sizes)
+        
+    def test_alt(self):
+        self.assertEqual(alt_method(self.sample), self.expected_sizes)
         
 
 def build_tree(terminal: [str]) -> dict:
@@ -125,7 +129,7 @@ def alt_method(terminal: [str]) -> dict:
             current_dirs.pop()
             continue
         if line[:5] == '$ cd ':
-            new_dir = f"{current_dirs[-1]}/{line[5:]}"
+            new_dir = f"{current_dirs[-1]}{line[5:]}/"
             current_dirs.append(new_dir)
             dir_sizes[new_dir] = 0
             continue
@@ -161,4 +165,5 @@ if __name__ == '__main__':
 
     needed_space = 30000000 - (70000000 - dir_sizes['/'])
     print(min(s for s in dir_sizes.values() if s >= needed_space))
-
+    
+    print(alt_dir_sizes == dir_sizes)
