@@ -24,6 +24,17 @@ class TodayTest(unittest.TestCase):
         self.assertEqual(jung.monkeys[1].objects_seen, 95)
         self.assertEqual(jung.monkeys[2].objects_seen, 7)
         self.assertEqual(jung.monkeys[3].objects_seen, 105)
+        
+    def test_part_2(self):
+        from test_input import monkeys
+        jung = Jungle(monkeys)
+        jung.run_game()
+        self.assertEqual(jung.monkeys[0].objects_seen, 52166)
+        self.assertEqual(jung.monkeys[1].objects_seen, 47830)
+        self.assertEqual(jung.monkeys[2].objects_seen, 1938)
+        self.assertEqual(jung.monkeys[3].objects_seen, 52013)
+
+
 
 
 class Jungle:
@@ -39,7 +50,7 @@ class Jungle:
                 self.monkeys[next_object[1]].objects.append(next_object[0])
                 
     def run_game(self):
-        for _ in range(20):
+        for _ in range(10000):
             self.run_round()
 
 

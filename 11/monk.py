@@ -21,7 +21,9 @@ class Monkey:
         elif self.operation[:2] == '+ ':
             worry_level += int(self.operation[2:])
         
-        worry_level //= 3
+        # worry_level //= 3
+        worry_level %= 11 * 3 * 5 * 7 * 19 * 2 * 13 * 17
+        # worry_level %= 23 * 19 * 13 * 17
         
         if worry_level % self.divisible == 0:
             return worry_level, self.success_monkey
