@@ -24,6 +24,7 @@ class StormValley:
     print_steps = False
     
     def load_file(self, filename):
+        self.max_expeditions = 0
         self.storms = []
         with open(filename) as f:
             for row, line in enumerate(f):
@@ -64,6 +65,8 @@ class StormValley:
                 next_expeditions.add((row + 1, col))
             if col < self.width - 1 and (row, col + 1) not in self.storms_by_pos:
                 next_expeditions.add((row, col + 1))
+        if len(next_expeditions) > self.max_expeditions:
+            self.max_expeditions = len(next_expeditions)
         self.expeditions = next_expeditions
     
     def find_way_out(self) -> int:
@@ -116,4 +119,4 @@ if __name__ == '__main__':
     start = time.process_time()
     minutes_out = valley.find_way_out()
     print(f"{minutes_out} took {time.process_time() - start} sec")
-    print(f"{minutes_out + valley.find_way_back() + valley.find_way_out() - 2} took {time.process_time() - start}")
+    print(f"{minutes_out + valley.find_way_back() + valley.find_way_out() - 2} max {valley.max_expeditions} took {time.process_time() - start}")
